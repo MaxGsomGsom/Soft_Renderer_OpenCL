@@ -17,7 +17,7 @@ namespace Soft_Renderer
  kernel void CalcShadow(
 int width,
 int height,
-
+ 
 __global float* zBufferShadow,
 
 float upper0,
