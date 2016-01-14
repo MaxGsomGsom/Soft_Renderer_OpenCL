@@ -333,7 +333,7 @@ namespace Soft_Renderer
                     RenderingServer.NetSendObject(null, NetData.StartRender, stream);
 
 
-                    bufferLight = AmbientOcclusionCycle(lightsNum - lightsForServer, lightIntensity);
+                    bufferLight = AmbientOcclusionCycle(lightsNum - lightsForServer, lightIntensity, 0, 0);
 
                     while (!stream.DataAvailable) { }
 
@@ -367,8 +367,55 @@ namespace Soft_Renderer
                 }
                 else
                 {
+
                     //основной цикл вычисления
-                    bufferLight = AmbientOcclusionCycle(lightsNum, lightIntensity);
+                    Task tsk1 = new Task(() =>
+                    {
+                        bufferLight = AmbientOcclusionCycle(lightsNum / 3, lightIntensity, 0, 0);
+                    });
+
+                    Task tsk2 = new Task(() =>
+                    {
+                        double[,] bufferLight2 = AmbientOcclusionCycle(lightsNum / 3, lightIntensity, 0, 0);
+
+                        tsk1.Wait();
+                        for (int o = 0; o < height; o++)
+                        {
+                            for (int p = 0; p < width; p++)
+                            {
+                                bufferLight[o, p] += bufferLight2[o, p];
+                            }
+                        }
+                    });
+
+                    Task tsk3 = new Task(() =>
+                    {
+                        double[,] bufferLight2 = AmbientOcclusionCycle(lightsNum / 3+1, lightIntensity, 0, 1);
+
+                        tsk1.Wait();
+                        for (int o = 0; o < height; o++)
+                        {
+                            for (int p = 0; p < width; p++)
+                            {
+                                bufferLight[o, p] += bufferLight2[o, p];
+                            }
+                        }
+                    });
+
+
+
+                    tsk1.Start();
+                    tsk2.Start();
+                    tsk3.Start();
+
+
+
+                    tsk1.Wait();
+                    tsk2.Wait();
+                    tsk3.Wait();
+
+
+
                 }
 
                 //отрисовка с иcпользованием буфера освещенности
@@ -451,7 +498,7 @@ namespace Soft_Renderer
         /// <param name="lights"></param>
         /// <param name="lightIntensity"></param>
         /// <returns></returns>
-        public double[,] AmbientOcclusionCycle(int lightsNum, double lightIntensity)
+        public double[,] AmbientOcclusionCycle(int lightsNum, double lightIntensity, int platformNum, int deviceNum)
         {
             ControlsForm.shadowtime = DateTime.Now.Ticks;
 
@@ -482,14 +529,14 @@ namespace Soft_Renderer
                 }
             }
 
-            ComputePlatform platform = ComputePlatform.Platforms[0];
+            ComputePlatform platform = ComputePlatform.Platforms[platformNum];
             ComputeContextPropertyList properties = new ComputeContextPropertyList(platform);
             ComputeContext context = new ComputeContext(platform.Devices, properties, null, IntPtr.Zero);
             ComputeProgram program = new ComputeProgram(context, Kernel.Source);
             program.Build(null, null, null, IntPtr.Zero);
             ComputeKernel kernel1 = program.CreateKernel("CalcShadow");
             ComputeKernel kernel2 = program.CreateKernel("CalcLight");
-            ComputeCommandQueue commands = new ComputeCommandQueue(context, context.Devices[0], ComputeCommandQueueFlags.None);
+            ComputeCommandQueue commands = new ComputeCommandQueue(context, context.Devices[deviceNum], ComputeCommandQueueFlags.None);
 
 
             ComputeBuffer<float> zBufferCL = new ComputeBuffer<float>(context, ComputeMemoryFlags.CopyHostPointer, zBufferArr);
@@ -766,8 +813,14 @@ namespace Soft_Renderer
 
                 commands.Finish();
 
+                zBufferShadowCL.Dispose();
+                rotateCoefsCL.Dispose();
+
             }
 
+
+
+            
 
 
             ControlsForm.shadowtime = DateTime.Now.Ticks - ControlsForm.shadowtime;
@@ -785,6 +838,8 @@ namespace Soft_Renderer
                 }
             }
 
+            zBufferCL.Dispose();
+            bufferLightCL.Dispose();
 
             return bufferLightArr;
         }

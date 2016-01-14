@@ -318,6 +318,12 @@ namespace Cloo
                 CL10.ReleaseKernel(Handle);
                 Handle.Invalidate();
             }
+
+
+            for (int i = 0; i < handles.Length; i++)
+            {
+                handles[i].Free();
+            }
         }
 
         #endregion
