@@ -84,7 +84,7 @@ int halfHeight
 
 	float d[3];
 
-	for (float m = 0.01; m <= lengthX-0.01; m++)
+	for (float m = 0.01f; m <= lengthX-0.01f; m++)
 	{
 
 		d[0] = longLineEnd[0] - m * step[0];
@@ -104,7 +104,7 @@ int halfHeight
 
 			//шейдер
 			//======================================================
-			if (zBufferShadow[frameX*height+frameY] < (d[2]+0.01))
+			if (zBufferShadow[frameX*height+frameY] < (d[2]+0.01f))
 			{
 				zBufferShadow[frameX*height+frameY] = d[2];
 			}
@@ -207,7 +207,7 @@ __global float* zBuffer
 
 	float d[3];
 
-	for (float m = 0.01; m <= lengthX-0.01; m++)
+	for (float m = 0.01f; m <= lengthX-0.01f; m++)
 	{
 
 		d[0] = longLineEnd[0] - m * step[0];

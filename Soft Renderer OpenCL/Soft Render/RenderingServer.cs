@@ -113,7 +113,7 @@ namespace Soft_Renderer
                                 r.indent = indent;
                                 r.progress = 0;
 
-                                double[,] lightBuffer = r.AmbientOcclusionCycle(lightsNum, lightIntensity);
+                                double[,] lightBuffer = r.AmbientOcclusionCycle(lightsNum, lightIntensity, 0, 0);
 
 
                                 NetSendObject(lightBuffer, NetData.LightBuffer, stream);
