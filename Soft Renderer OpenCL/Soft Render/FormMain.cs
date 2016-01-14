@@ -72,9 +72,7 @@ namespace Soft_Renderer
                     Height = (int)imgHeight;
                     pictureBox1.Image = temp;
                     ControlsForm.fulltime = DateTime.Now.Ticks - ControlsForm.fulltime;
-                    //MessageBox.Show("Fulltime: " + TimeSpan.FromTicks(ControlsForm.fulltime).ToString() + 
-                    //    "\nCalctime: " + TimeSpan.FromTicks(ControlsForm.calctime).ToString() +
-                    //    "\nShadowtime: " + TimeSpan.FromTicks(ControlsForm.shadowtime).ToString());
+                    ShowTime(this, new EventArgs());
                 }));
                 //============================
                 inProcess = false;
@@ -83,6 +81,10 @@ namespace Soft_Renderer
 
 
         }
+
+
+
+        public event EventHandler ShowTime;
 
 
         int i = 0;

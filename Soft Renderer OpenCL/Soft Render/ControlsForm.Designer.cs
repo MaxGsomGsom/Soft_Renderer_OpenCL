@@ -87,9 +87,16 @@
             this.textBox1ip = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
-            this.button1client = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.numericUpDown1lightsforserver = new System.Windows.Forms.NumericUpDown();
+            this.button1client = new System.Windows.Forms.Button();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.comboBox2cpu = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.comboBox1opencl = new System.Windows.Forms.ComboBox();
+            this.label8time = new System.Windows.Forms.Label();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -109,6 +116,8 @@
             this.groupBox11.SuspendLayout();
             this.groupBox12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1lightsforserver)).BeginInit();
+            this.groupBox13.SuspendLayout();
+            this.groupBox14.SuspendLayout();
             this.SuspendLayout();
             // 
             // button3run
@@ -798,7 +807,7 @@
             // 
             this.groupBox9.Controls.Add(this.checkBox1norm);
             this.groupBox9.Controls.Add(this.checkBox1shadow);
-            this.groupBox9.Location = new System.Drawing.Point(425, 321);
+            this.groupBox9.Location = new System.Drawing.Point(425, 312);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(200, 94);
             this.groupBox9.TabIndex = 47;
@@ -809,9 +818,9 @@
             // 
             this.groupBox10.Controls.Add(this.label1);
             this.groupBox10.Controls.Add(this.numericUpDown1numlights);
-            this.groupBox10.Location = new System.Drawing.Point(424, 430);
+            this.groupBox10.Location = new System.Drawing.Point(424, 412);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(200, 74);
+            this.groupBox10.Size = new System.Drawing.Size(200, 69);
             this.groupBox10.TabIndex = 48;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Ambient Occlusion";
@@ -822,7 +831,7 @@
             this.groupBox11.Controls.Add(this.checkBox1background);
             this.groupBox11.Controls.Add(this.numericUpDown1brightness);
             this.groupBox11.Controls.Add(this.checkBox1texture);
-            this.groupBox11.Location = new System.Drawing.Point(424, 193);
+            this.groupBox11.Location = new System.Drawing.Point(424, 184);
             this.groupBox11.Name = "groupBox11";
             this.groupBox11.Size = new System.Drawing.Size(200, 115);
             this.groupBox11.TabIndex = 49;
@@ -831,7 +840,7 @@
             // 
             // button1server
             // 
-            this.button1server.Location = new System.Drawing.Point(38, 22);
+            this.button1server.Location = new System.Drawing.Point(22, 31);
             this.button1server.Name = "button1server";
             this.button1server.Size = new System.Drawing.Size(120, 30);
             this.button1server.TabIndex = 50;
@@ -841,7 +850,7 @@
             // 
             // textBox1ip
             // 
-            this.textBox1ip.Location = new System.Drawing.Point(295, 59);
+            this.textBox1ip.Location = new System.Drawing.Point(279, 77);
             this.textBox1ip.Name = "textBox1ip";
             this.textBox1ip.Size = new System.Drawing.Size(100, 22);
             this.textBox1ip.TabIndex = 52;
@@ -850,7 +859,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(171, 65);
+            this.label4.Location = new System.Drawing.Point(156, 80);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 17);
             this.label4.TabIndex = 53;
@@ -864,27 +873,17 @@
             this.groupBox12.Controls.Add(this.button1server);
             this.groupBox12.Controls.Add(this.label4);
             this.groupBox12.Controls.Add(this.textBox1ip);
-            this.groupBox12.Location = new System.Drawing.Point(12, 556);
+            this.groupBox12.Location = new System.Drawing.Point(12, 564);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(613, 103);
+            this.groupBox12.Size = new System.Drawing.Size(407, 120);
             this.groupBox12.TabIndex = 54;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Network rendering (Ambient Occlusion)";
             // 
-            // button1client
-            // 
-            this.button1client.Location = new System.Drawing.Point(38, 59);
-            this.button1client.Name = "button1client";
-            this.button1client.Size = new System.Drawing.Size(120, 29);
-            this.button1client.TabIndex = 55;
-            this.button1client.Text = "Start client";
-            this.button1client.UseVisualStyleBackColor = true;
-            this.button1client.Click += new System.EventHandler(this.button1client_Click);
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(172, 29);
+            this.label5.Location = new System.Drawing.Point(156, 38);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(117, 17);
             this.label5.TabIndex = 13;
@@ -892,7 +891,7 @@
             // 
             // numericUpDown1lightsforserver
             // 
-            this.numericUpDown1lightsforserver.Location = new System.Drawing.Point(295, 27);
+            this.numericUpDown1lightsforserver.Location = new System.Drawing.Point(279, 36);
             this.numericUpDown1lightsforserver.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -913,11 +912,107 @@
             0});
             this.numericUpDown1lightsforserver.ValueChanged += new System.EventHandler(this.numericUpDown1lightsforserver_ValueChanged);
             // 
+            // button1client
+            // 
+            this.button1client.Location = new System.Drawing.Point(22, 74);
+            this.button1client.Name = "button1client";
+            this.button1client.Size = new System.Drawing.Size(120, 29);
+            this.button1client.TabIndex = 55;
+            this.button1client.Text = "Start client";
+            this.button1client.UseVisualStyleBackColor = true;
+            this.button1client.Click += new System.EventHandler(this.button1client_Click);
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.label7);
+            this.groupBox13.Controls.Add(this.comboBox2cpu);
+            this.groupBox13.Controls.Add(this.label6);
+            this.groupBox13.Controls.Add(this.comboBox1opencl);
+            this.groupBox13.Location = new System.Drawing.Point(425, 487);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(200, 95);
+            this.groupBox13.TabIndex = 55;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Threads";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(81, 63);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(36, 17);
+            this.label7.TabIndex = 17;
+            this.label7.Text = "CPU";
+            // 
+            // comboBox2cpu
+            // 
+            this.comboBox2cpu.FormattingEnabled = true;
+            this.comboBox2cpu.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"});
+            this.comboBox2cpu.Location = new System.Drawing.Point(11, 60);
+            this.comboBox2cpu.Name = "comboBox2cpu";
+            this.comboBox2cpu.Size = new System.Drawing.Size(52, 24);
+            this.comboBox2cpu.TabIndex = 16;
+            this.comboBox2cpu.Text = "8";
+            this.comboBox2cpu.TextUpdate += new System.EventHandler(this.comboBox2cpu_TextUpdate);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(81, 28);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(60, 17);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "OpenCL";
+            // 
+            // comboBox1opencl
+            // 
+            this.comboBox1opencl.FormattingEnabled = true;
+            this.comboBox1opencl.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2"});
+            this.comboBox1opencl.Location = new System.Drawing.Point(11, 27);
+            this.comboBox1opencl.Name = "comboBox1opencl";
+            this.comboBox1opencl.Size = new System.Drawing.Size(52, 24);
+            this.comboBox1opencl.TabIndex = 0;
+            this.comboBox1opencl.Text = "0";
+            this.comboBox1opencl.TextUpdate += new System.EventHandler(this.comboBox1_TextUpdate);
+            // 
+            // label8time
+            // 
+            this.label8time.AutoSize = true;
+            this.label8time.Location = new System.Drawing.Point(9, 29);
+            this.label8time.Name = "label8time";
+            this.label8time.Size = new System.Drawing.Size(64, 17);
+            this.label8time.TabIndex = 56;
+            this.label8time.Text = "00:00:00";
+            // 
+            // groupBox14
+            // 
+            this.groupBox14.Controls.Add(this.label8time);
+            this.groupBox14.Location = new System.Drawing.Point(425, 588);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(200, 96);
+            this.groupBox14.TabIndex = 57;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "Time";
+            // 
             // ControlsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(637, 669);
+            this.ClientSize = new System.Drawing.Size(637, 696);
+            this.Controls.Add(this.groupBox14);
+            this.Controls.Add(this.groupBox13);
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox11);
             this.Controls.Add(this.groupBox10);
@@ -964,6 +1059,10 @@
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1lightsforserver)).EndInit();
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox13.PerformLayout();
+            this.groupBox14.ResumeLayout(false);
+            this.groupBox14.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1032,5 +1131,12 @@
         private System.Windows.Forms.Button button1client;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericUpDown1lightsforserver;
+        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox comboBox1opencl;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox comboBox2cpu;
+        private System.Windows.Forms.Label label8time;
+        private System.Windows.Forms.GroupBox groupBox14;
     }
 }

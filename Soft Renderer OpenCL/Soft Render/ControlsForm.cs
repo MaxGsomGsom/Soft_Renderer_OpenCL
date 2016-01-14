@@ -16,7 +16,7 @@ namespace Soft_Renderer
 
         public static long fulltime, calctime, shadowtime;
 
-
+        
 
         string texture = "RF-15_PeakEagle_P01.png";
         string obj = "RF-15_PeakEagle.obj";
@@ -41,8 +41,17 @@ namespace Soft_Renderer
             t.Interval = 10;
             t.Tick += T_Tick;
 
+
+            main.ShowTime += Main_ShowTime;
+
         }
 
+        private void Main_ShowTime(object sender, EventArgs e)
+        {
+            label8time.Text = ("Full: " + TimeSpan.FromTicks(fulltime).ToString() +
+                        "\nCalc: " + TimeSpan.FromTicks(calctime).ToString() +
+                        "\nShadow: " + TimeSpan.FromTicks(shadowtime).ToString());
+        }
 
         private void T_Tick(object sender, EventArgs e)
         {
@@ -377,6 +386,15 @@ namespace Soft_Renderer
             }
         }
 
+        private void comboBox1_TextUpdate(object sender, EventArgs e)
+        {
+            main.r.opencl = Convert.ToInt32(comboBox1opencl.Text);
+        }
+
+        private void comboBox2cpu_TextUpdate(object sender, EventArgs e)
+        {
+            main.r.cpu = Convert.ToInt32(comboBox2cpu.Text);
+        }
 
         private void button1client_Click(object sender, EventArgs e)
         {
