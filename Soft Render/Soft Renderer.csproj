@@ -39,10 +39,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cloo, Version=0.9.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Cloo-0.9.1\Cloo\bin\Debug\Cloo.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -119,6 +115,12 @@
     <Content Include="models\african_head_diffuse.png" />
     <Content Include="models\bengal_tiger.png" />
     <Content Include="models\RF-15_PeakEagle_P01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cloo\Cloo.VS2010.csproj">
+      <Project>{656e96ce-2587-4ccc-a4db-06d36267133a}</Project>
+      <Name>Cloo.VS2010</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

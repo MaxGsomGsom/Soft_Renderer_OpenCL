@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soft Renderer", "Soft Render\Soft Renderer.csproj", "{1F4D1973-CC8A-4796-9241-E4B87CC83464}"
+	ProjectSection(ProjectDependencies) = postProject
+		{656E96CE-2587-4CCC-A4DB-06D36267133A} = {656E96CE-2587-4CCC-A4DB-06D36267133A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloo.VS2010", "Cloo\Cloo.VS2010.csproj", "{656E96CE-2587-4CCC-A4DB-06D36267133A}"
 EndProject
