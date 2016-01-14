@@ -14,10 +14,10 @@ namespace Soft_Renderer
 
 
         public static string Source = @" 
- kernel void CalcShadow(
+kernel void CalcShadow(
 int width,
 int height,
- 
+
 __global float* zBufferShadow,
 
 float upper0,
@@ -84,7 +84,7 @@ int halfHeight
 
 	float d[3];
 
-	for (float m = 0.01f; m <= lengthX-0.01f; m++)
+	for (float m = 0.01f; m <= lengthX-0.01f; m+=1)
 	{
 
 		d[0] = longLineEnd[0] - m * step[0];
@@ -207,7 +207,7 @@ __global float* zBuffer
 
 	float d[3];
 
-	for (float m = 0.01f; m <= lengthX-0.01f; m++)
+	for (float m = 0.01f; m <= lengthX-0.01f; m+=1)
 	{
 
 		d[0] = longLineEnd[0] - m * step[0];
@@ -229,26 +229,26 @@ __global float* zBuffer
 			//шейдер
 			//======================================================
 			if (zBuffer[frameX*height+frameY] <= (d[2]+1))
-					{
+			{
 
-						float rotated[3] = {
-							rotateCoefs[0] * d[0] + rotateCoefs[1] * d[1] + rotateCoefs[2] * d[2],
-							rotateCoefs[3] * d[0] + rotateCoefs[4] * d[1] + rotateCoefs[5] * d[2],
-							rotateCoefs[6] * d[0] + rotateCoefs[7] * d[1] + rotateCoefs[8] * d[2]
-						};
-
-
-						int xIntShadow = (int)(rotated[0] + 0.5f);
-						int yIntShadow = (int)(rotated[1] + 0.5f);
+				float rotated[3] = {
+					rotateCoefs[0] * d[0] + rotateCoefs[1] * d[1] + rotateCoefs[2] * d[2],
+					rotateCoefs[3] * d[0] + rotateCoefs[4] * d[1] + rotateCoefs[5] * d[2],
+					rotateCoefs[6] * d[0] + rotateCoefs[7] * d[1] + rotateCoefs[8] * d[2]
+				};
 
 
-						if (xIntShadow < halfWidth && yIntShadow < halfHeight && xIntShadow > -halfWidth && yIntShadow > -halfHeight &&
-								(rotated[2]) >= zBufferShadow[(xIntShadow + halfWidth)* height + (yIntShadow + halfHeight)]) 
-						{
-							bufferLight[frameX*height+frameY] += lightIntensity;
-						}
+				int xIntShadow = (int)(rotated[0] + 0.5f);
+				int yIntShadow = (int)(rotated[1] + 0.5f);
 
-					}
+
+				if (xIntShadow < halfWidth && yIntShadow < halfHeight && xIntShadow > -halfWidth && yIntShadow > -halfHeight &&
+						(rotated[2]) >= zBufferShadow[(xIntShadow + halfWidth)* height + (yIntShadow + halfHeight)]) 
+				{
+					bufferLight[frameX*height+frameY] += lightIntensity;
+				}
+
+			}
 			//===========
 
 		}
