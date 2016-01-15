@@ -14,7 +14,7 @@ namespace Soft_Renderer
     public partial class ControlsForm : Form
     {
 
-        public static long fulltime, calctime, shadowtime;
+        public static long calctime, lighttime;
 
         
 
@@ -48,9 +48,9 @@ namespace Soft_Renderer
 
         private void Main_ShowTime(object sender, EventArgs e)
         {
-            label8time.Text = ("Full: " + TimeSpan.FromTicks(fulltime).ToString() +
-                        "\nCalc: " + TimeSpan.FromTicks(calctime).ToString() +
-                        "\nShadow: " + TimeSpan.FromTicks(shadowtime).ToString());
+            label8time.Text = (
+                        "Calc: " + TimeSpan.FromTicks(calctime).ToString() +
+                        "\nLight: " + TimeSpan.FromTicks(lighttime).ToString());
         }
 
         private void T_Tick(object sender, EventArgs e)
@@ -201,6 +201,9 @@ namespace Soft_Renderer
                 numericUpDown1lightsforserver.Value = new decimal(main.r.lightsForServer);
 
                 checkBox1background.Checked = false;
+
+                comboBox1opencl.Enabled = true;
+                comboBox2cpu.Enabled = true;
 
             }
             catch
@@ -386,14 +389,15 @@ namespace Soft_Renderer
             }
         }
 
-        private void comboBox1_TextUpdate(object sender, EventArgs e)
+
+        private void comboBox1opencl_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            main.r.opencl = Convert.ToInt32(comboBox1opencl.Text);
+            main.r.opencl = Convert.ToInt32((string)comboBox1opencl.SelectedItem);
         }
 
-        private void comboBox2cpu_TextUpdate(object sender, EventArgs e)
+        private void comboBox2cpu_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            main.r.cpu = Convert.ToInt32(comboBox2cpu.Text);
+            main.r.cpu = Convert.ToInt32((string)comboBox2cpu.SelectedItem);
         }
 
         private void button1client_Click(object sender, EventArgs e)
