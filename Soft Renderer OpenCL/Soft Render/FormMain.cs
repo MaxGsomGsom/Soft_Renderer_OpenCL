@@ -49,7 +49,6 @@ namespace Soft_Renderer
         /// </summary>
         public void Upd()
         {
-            ControlsForm.fulltime = DateTime.Now.Ticks;
             if (inProcess) return;
 
 
@@ -71,7 +70,6 @@ namespace Soft_Renderer
                     Width = (int)imgWidth;
                     Height = (int)imgHeight;
                     pictureBox1.Image = temp;
-                    ControlsForm.fulltime = DateTime.Now.Ticks - ControlsForm.fulltime;
                     ShowTime(this, new EventArgs());
                 }));
                 //============================

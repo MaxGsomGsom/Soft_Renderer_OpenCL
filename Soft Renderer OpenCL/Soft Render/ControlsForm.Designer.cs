@@ -946,6 +946,7 @@
             // 
             // comboBox2cpu
             // 
+            this.comboBox2cpu.Enabled = false;
             this.comboBox2cpu.FormattingEnabled = true;
             this.comboBox2cpu.Items.AddRange(new object[] {
             "0",
@@ -962,7 +963,7 @@
             this.comboBox2cpu.Size = new System.Drawing.Size(52, 24);
             this.comboBox2cpu.TabIndex = 16;
             this.comboBox2cpu.Text = "8";
-            this.comboBox2cpu.TextUpdate += new System.EventHandler(this.comboBox2cpu_TextUpdate);
+            this.comboBox2cpu.SelectionChangeCommitted += new System.EventHandler(this.comboBox2cpu_SelectionChangeCommitted);
             // 
             // label6
             // 
@@ -975,17 +976,19 @@
             // 
             // comboBox1opencl
             // 
+            this.comboBox1opencl.Enabled = false;
             this.comboBox1opencl.FormattingEnabled = true;
             this.comboBox1opencl.Items.AddRange(new object[] {
             "0",
             "1",
-            "2"});
+            "2",
+            "3"});
             this.comboBox1opencl.Location = new System.Drawing.Point(11, 27);
             this.comboBox1opencl.Name = "comboBox1opencl";
             this.comboBox1opencl.Size = new System.Drawing.Size(52, 24);
             this.comboBox1opencl.TabIndex = 0;
             this.comboBox1opencl.Text = "0";
-            this.comboBox1opencl.TextUpdate += new System.EventHandler(this.comboBox1_TextUpdate);
+            this.comboBox1opencl.SelectionChangeCommitted += new System.EventHandler(this.comboBox1opencl_SelectionChangeCommitted);
             // 
             // label8time
             // 
@@ -1026,6 +1029,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "ControlsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

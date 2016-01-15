@@ -50,7 +50,7 @@ namespace Soft_Renderer
 
 
         public double indent = 0.1; //отступ при растеризации чтобы не было наложения
-        public double quality = 0.5; //качество рендера (размер шага в пикселях)
+        public double quality = 1; //качество рендера (размер шага в пикселях)
         public bool optimization = false; //использовать оптимизацию при рендеринге (при большом качестве отсекает повторяющиеся точки)
 
         public double brightness = 1;
@@ -81,12 +81,22 @@ namespace Soft_Renderer
         string textureFileName = "";
 
 
+
+
+        ComputePlatform platform ;
+        ComputeContextPropertyList properties;
+        ComputeContext context;
+        ComputeProgram program;
+
+
         /// <summary>
         /// Рендерить кадр
         /// </summary>
         /// <returns></returns>
         public Bitmap GetFrame()
         {
+            ControlsForm.calctime = DateTime.Now.Ticks;
+
             Bitmap result = new Bitmap(width, height);
             frame = new FastBitmap(result);
             frame.CopyBytesFromSource();
@@ -94,6 +104,11 @@ namespace Soft_Renderer
             MainLoop();
 
             frame.ReturnBytesToSource();
+
+
+            ControlsForm.calctime = DateTime.Now.Ticks - ControlsForm.calctime;
+
+
             return result;
         }
 
@@ -146,7 +161,6 @@ namespace Soft_Renderer
             }
 
 
-
             if (ComputePlatform.Platforms[0].Devices[0].Name.Contains("CPU"))
             {
                 devNumGPU = 1;
@@ -154,7 +168,16 @@ namespace Soft_Renderer
             }
 
 
+
+            platform = ComputePlatform.Platforms[0];
+            properties = new ComputeContextPropertyList(platform);
+            context = new ComputeContext(platform.Devices, properties, null, IntPtr.Zero);
+            program = new ComputeProgram(context, Kernel.Source);
+            program.Build(null, null, null, IntPtr.Zero);
+
         }
+
+
 
 
         /// <summary>
@@ -300,7 +323,6 @@ namespace Soft_Renderer
         /// </summary>
         public void MainLoop()
         {
-            ControlsForm.calctime = DateTime.Now.Ticks;
             progress = 0;
 
             ambient_light = 0.5 * brightness;
@@ -385,7 +407,7 @@ namespace Soft_Renderer
 
                 //отрисовка с иcпользованием буфера освещенности
                 RenderRasterPolygons(polygons, dots, ShaderAmbientOcclusion, true, false, bufferLight, null, null, 0);
-                ControlsForm.calctime = DateTime.Now.Ticks - ControlsForm.calctime;
+                
                 return;
             }
 
@@ -429,18 +451,17 @@ namespace Soft_Renderer
 
         }
 
-        private double[,] RunCalculationsCPUorOpenCL(double lightIntensity, double[,] bufferLight, int lightsNum)
+        public double[,] RunCalculationsCPUorOpenCL(double lightIntensity, double[,] bufferLight, int lightsNum)
         {
 
-            ControlsForm.shadowtime = DateTime.Now.Ticks;
 
-            Task tsk1 = null, tsk2 = null;
+            Task tsk1 = null, tsk2 = null, tsk3 = null;
             //вычисление в 1 поток OpenCL
             if (opencl > 0)
             {
                 tsk1 = new Task(() =>
                 {
-                    bufferLight = AmbientOcclusionCycleOpenCL(lightsNum / (opencl + cpu > 0 ? 1 : 0), lightIntensity, 0, devNumGPU);
+                    bufferLight = AmbientOcclusionCycleOpenCL(lightsNum / (opencl + (cpu > 0 ? 1 : 0)), lightIntensity, devNumGPU);
                 });
 
 
@@ -450,7 +471,26 @@ namespace Soft_Renderer
 
                     tsk2 = new Task(() =>
                     {
-                        double[,] bufferLight2 = AmbientOcclusionCycleOpenCL(lightsNum / (opencl + cpu > 0 ? 1 : 0), lightIntensity, 0, devNumGPU);
+                        double[,] bufferLight2 = AmbientOcclusionCycleOpenCL(lightsNum / (opencl + (cpu > 0 ? 1 : 0)), lightIntensity, devNumGPU);
+
+                        tsk1.Wait();
+                        for (int o = 0; o < height; o++)
+                        {
+                            for (int p = 0; p < width; p++)
+                            {
+                                bufferLight[o, p] += bufferLight2[o, p];
+                            }
+                        }
+                    });
+
+                }
+
+                if (opencl > 2)
+                {
+                    //вычисление на процессоре на OpenCL
+                    tsk3 = new Task(() =>
+                    {
+                        double[,] bufferLight2 = AmbientOcclusionCycleOpenCL((int)(0.75*lightsNum / (opencl + (cpu > 0 ? 1 : 0))), lightIntensity, devNumCPU);
 
                         tsk1.Wait();
                         for (int o = 0; o < height; o++)
@@ -464,20 +504,7 @@ namespace Soft_Renderer
                 }
             }
 
-            //вычисление на процессоре на OpenCL
-            Task tsk3 = new Task(() =>
-            {
-                double[,] bufferLight2 = AmbientOcclusionCycleOpenCL(lightsNum / (opencl + cpu > 0 ? 1 : 0), lightIntensity, 0, devNumCPU);
-
-                tsk1.Wait();
-                for (int o = 0; o < height; o++)
-                {
-                    for (int p = 0; p < width; p++)
-                    {
-                        bufferLight[o, p] += bufferLight2[o, p];
-                    }
-                }
-            });
+            
 
 
             //запуск задач
@@ -492,16 +519,21 @@ namespace Soft_Renderer
             //запуск выполнения на cpu если выбрано в настройках
             if (cpu > 0)
             {
-                double[,] bufferLight2 = AmbientOcclusionCycle(lightsNum / (opencl + cpu > 0 ? 1 : 0), lightIntensity);
+                double[,] bufferLight2 = AmbientOcclusionCycle(lightsNum / (opencl + (cpu > 0 ? 1 : 0)), lightIntensity);
 
-                tsk1.Wait();
-                for (int o = 0; o < height; o++)
+                if (opencl > 0)
                 {
-                    for (int p = 0; p < width; p++)
+                    tsk1.Wait();
+
+                    for (int o = 0; o < height; o++)
                     {
-                        bufferLight[o, p] += bufferLight2[o, p];
+                        for (int p = 0; p < width; p++)
+                        {
+                            bufferLight[o, p] += bufferLight2[o, p];
+                        }
                     }
                 }
+                else bufferLight = bufferLight2;
 
             }
 
@@ -515,8 +547,6 @@ namespace Soft_Renderer
                 if (opencl > 2) tsk3.Wait();
             }
 
-
-            ControlsForm.shadowtime = DateTime.Now.Ticks - ControlsForm.shadowtime;
 
             return bufferLight;
         }
@@ -555,7 +585,7 @@ namespace Soft_Renderer
         /// <param name="lights"></param>
         /// <param name="lightIntensity"></param>
         /// <returns></returns>
-        public double[,] AmbientOcclusionCycleOpenCL(int lightsNum, double lightIntensity, int platformNum, int deviceNum)
+        public double[,] AmbientOcclusionCycleOpenCL(int lightsNum, double lightIntensity, int deviceNum)
         {
 
             //заполнение массива источников света
@@ -588,11 +618,7 @@ namespace Soft_Renderer
 
 
             //подготовка платформы
-            ComputePlatform platform = ComputePlatform.Platforms[platformNum];
-            ComputeContextPropertyList properties = new ComputeContextPropertyList(platform);
-            ComputeContext context = new ComputeContext(platform.Devices, properties, null, IntPtr.Zero);
-            ComputeProgram program = new ComputeProgram(context, Kernel.Source);
-            program.Build(null, null, null, IntPtr.Zero);
+            
             ComputeKernel kernel1 = program.CreateKernel("CalcShadow");
             ComputeKernel kernel2 = program.CreateKernel("CalcLight");
             ComputeCommandQueue commands = new ComputeCommandQueue(context, context.Devices[deviceNum], ComputeCommandQueueFlags.None);
@@ -616,7 +642,7 @@ namespace Soft_Renderer
             kernel2.SetMemoryArgument(23, bufferLightCL);
             kernel2.SetMemoryArgument(24, zBufferCL);
 
-
+            ControlsForm.lighttime = DateTime.Now.Ticks;
 
             for (int i = 0; i < lights.Count; i++)
             {
@@ -866,7 +892,7 @@ namespace Soft_Renderer
 
             }
 
-
+            ControlsForm.lighttime = DateTime.Now.Ticks - ControlsForm.lighttime;
 
             commands.ReadFromBuffer(bufferLightCL, ref bufferLight, false, null);
 
@@ -912,6 +938,8 @@ namespace Soft_Renderer
             ParallelOptions opt = new ParallelOptions();
             opt.MaxDegreeOfParallelism = cpu;
 
+            ControlsForm.lighttime = DateTime.Now.Ticks;
+
             Parallel.For(0, lights.Count, opt, new Action<int>((i) =>
             {
                 //for (int i = 0; i < lights.Count; i++)
@@ -937,7 +965,10 @@ namespace Soft_Renderer
                 RenderRasterPolygons(polygons, dots, ShaderAmbientOcclusionLightBuffer, false, false, rotateCoefs, bufferLight, zBufferShadow, lightIntensity);
                 //}
             }));
-            
+
+
+            ControlsForm.lighttime = DateTime.Now.Ticks - ControlsForm.lighttime;
+
             return bufferLight;
         }
 
