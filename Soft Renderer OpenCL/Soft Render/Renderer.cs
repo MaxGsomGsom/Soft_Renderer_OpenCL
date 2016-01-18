@@ -42,6 +42,7 @@ namespace Soft_Renderer
 
         public int lightsNum = 100;
         public int lightsForServer = 50;
+        public int lightsForCPU = 100;
 
         public bool netMode = false;
         TcpClient client;
@@ -461,7 +462,7 @@ namespace Soft_Renderer
             {
                 tsk1 = new Task(() =>
                 {
-                    bufferLight = AmbientOcclusionCycleOpenCL(lightsNum / (opencl + (cpu > 0 ? 1 : 0)), lightIntensity, devNumGPU);
+                    bufferLight = AmbientOcclusionCycleOpenCL((lightsNum - lightsForCPU) / (opencl > 2 ? 2 : opencl), lightIntensity, devNumGPU);
                 });
 
 
@@ -471,7 +472,7 @@ namespace Soft_Renderer
 
                     tsk2 = new Task(() =>
                     {
-                        double[,] bufferLight2 = AmbientOcclusionCycleOpenCL(lightsNum / (opencl + (cpu > 0 ? 1 : 0)), lightIntensity, devNumGPU);
+                        double[,] bufferLight2 = AmbientOcclusionCycleOpenCL((lightsNum - lightsForCPU) / (opencl>2 ? 2 : opencl), lightIntensity, devNumGPU);
 
                         tsk1.Wait();
                         for (int o = 0; o < height; o++)
@@ -490,7 +491,7 @@ namespace Soft_Renderer
                     //вычисление на процессоре на OpenCL
                     tsk3 = new Task(() =>
                     {
-                        double[,] bufferLight2 = AmbientOcclusionCycleOpenCL((int)(0.75*lightsNum / (opencl + (cpu > 0 ? 1 : 0))), lightIntensity, devNumCPU);
+                        double[,] bufferLight2 = AmbientOcclusionCycleOpenCL(lightsForCPU, lightIntensity, devNumCPU);
 
                         tsk1.Wait();
                         for (int o = 0; o < height; o++)
@@ -519,7 +520,7 @@ namespace Soft_Renderer
             //запуск выполнения на cpu если выбрано в настройках
             if (cpu > 0)
             {
-                double[,] bufferLight2 = AmbientOcclusionCycle(lightsNum / (opencl + (cpu > 0 ? 1 : 0)), lightIntensity);
+                double[,] bufferLight2 = AmbientOcclusionCycle(lightsForCPU, lightIntensity);
 
                 if (opencl > 0)
                 {
@@ -642,7 +643,7 @@ namespace Soft_Renderer
             kernel2.SetMemoryArgument(23, bufferLightCL);
             kernel2.SetMemoryArgument(24, zBufferCL);
 
-            ControlsForm.lighttime = DateTime.Now.Ticks;
+            ControlsForm.lighttimeStart = DateTime.Now.Ticks;
 
             for (int i = 0; i < lights.Count; i++)
             {
@@ -892,9 +893,10 @@ namespace Soft_Renderer
 
             }
 
-            ControlsForm.lighttime = DateTime.Now.Ticks - ControlsForm.lighttime;
+            ControlsForm.lighttime = DateTime.Now.Ticks - ControlsForm.lighttimeStart;
 
             commands.ReadFromBuffer(bufferLightCL, ref bufferLight, false, null);
+            commands.Finish();
 
             double[,] bufferLightArr = new double[width, height];
             for (int s = 0; s < width; s++)
@@ -938,7 +940,7 @@ namespace Soft_Renderer
             ParallelOptions opt = new ParallelOptions();
             opt.MaxDegreeOfParallelism = cpu;
 
-            ControlsForm.lighttime = DateTime.Now.Ticks;
+            ControlsForm.lighttimeStart = DateTime.Now.Ticks;
 
             Parallel.For(0, lights.Count, opt, new Action<int>((i) =>
             {
@@ -967,7 +969,7 @@ namespace Soft_Renderer
             }));
 
 
-            ControlsForm.lighttime = DateTime.Now.Ticks - ControlsForm.lighttime;
+            ControlsForm.lighttime = DateTime.Now.Ticks - ControlsForm.lighttimeStart;
 
             return bufferLight;
         }

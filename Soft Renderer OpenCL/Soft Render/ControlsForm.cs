@@ -14,7 +14,7 @@ namespace Soft_Renderer
     public partial class ControlsForm : Form
     {
 
-        public static long calctime, lighttime;
+        public static long calctime, lighttime, lighttimeStart;
 
         
 
@@ -369,6 +369,9 @@ namespace Soft_Renderer
                 label4.Enabled = false;
                 label5.Enabled = false;
                 numericUpDown1lightsforserver.Enabled = false;
+                comboBox1opencl.Enabled = true;
+                comboBox2cpu.Enabled = true;
+                groupBox13threads.Enabled = true;
                 button1server.Text = "Stop server";
             }
             else
@@ -392,12 +395,26 @@ namespace Soft_Renderer
 
         private void comboBox1opencl_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            main.r.opencl = Convert.ToInt32((string)comboBox1opencl.SelectedItem);
+            if (main.r != null)
+            {
+                main.r.opencl = Convert.ToInt32(((string)comboBox1opencl.SelectedItem).Substring(0, 1));
+            }
+            else if (server.r != null)
+            {
+                server.r.opencl = Convert.ToInt32(((string)comboBox1opencl.SelectedItem).Substring(0, 1));
+            }
         }
 
         private void comboBox2cpu_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            main.r.cpu = Convert.ToInt32((string)comboBox2cpu.SelectedItem);
+            if (main.r != null)
+            {
+                main.r.cpu = Convert.ToInt32((string)comboBox2cpu.SelectedItem);
+            }
+            else if (server.r != null)
+            {
+                server.r.opencl = Convert.ToInt32((string)comboBox2cpu.SelectedItem);
+            }
         }
 
         private void button1client_Click(object sender, EventArgs e)
@@ -423,6 +440,24 @@ namespace Soft_Renderer
                 main.r.StopClient();
                 button1client.Text = "Start client";
                 button1server.Enabled = true;
+            }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            if (main.r != null && numericUpDownCPULights.Value > numericUpDown1numlights.Value)
+            {
+                numericUpDownCPULights.Value = numericUpDown1numlights.Value;
+            }
+
+
+                if (main.r != null)
+            {
+                main.r.lightsForCPU = (int)numericUpDownCPULights.Value;
+            }
+            else if (server !=null)
+            {
+                server.r.lightsForCPU = (int)numericUpDownCPULights.Value;
             }
         }
 
