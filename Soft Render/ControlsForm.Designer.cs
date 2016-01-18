@@ -90,7 +90,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.numericUpDown1lightsforserver = new System.Windows.Forms.NumericUpDown();
             this.button1client = new System.Windows.Forms.Button();
-            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.groupBox13threads = new System.Windows.Forms.GroupBox();
+            this.numericUpDownCPULights = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.comboBox2cpu = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -116,7 +118,8 @@
             this.groupBox11.SuspendLayout();
             this.groupBox12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1lightsforserver)).BeginInit();
-            this.groupBox13.SuspendLayout();
+            this.groupBox13threads.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCPULights)).BeginInit();
             this.groupBox14.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -655,7 +658,7 @@
             // 
             // numericUpDown1numlights
             // 
-            this.numericUpDown1numlights.Location = new System.Drawing.Point(108, 31);
+            this.numericUpDown1numlights.Location = new System.Drawing.Point(119, 31);
             this.numericUpDown1numlights.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -667,7 +670,7 @@
             0,
             0});
             this.numericUpDown1numlights.Name = "numericUpDown1numlights";
-            this.numericUpDown1numlights.Size = new System.Drawing.Size(83, 22);
+            this.numericUpDown1numlights.Size = new System.Drawing.Size(72, 22);
             this.numericUpDown1numlights.TabIndex = 10;
             this.numericUpDown1numlights.Value = new decimal(new int[] {
             100,
@@ -922,23 +925,52 @@
             this.button1client.UseVisualStyleBackColor = true;
             this.button1client.Click += new System.EventHandler(this.button1client_Click);
             // 
-            // groupBox13
+            // groupBox13threads
             // 
-            this.groupBox13.Controls.Add(this.label7);
-            this.groupBox13.Controls.Add(this.comboBox2cpu);
-            this.groupBox13.Controls.Add(this.label6);
-            this.groupBox13.Controls.Add(this.comboBox1opencl);
-            this.groupBox13.Location = new System.Drawing.Point(425, 487);
-            this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(200, 95);
-            this.groupBox13.TabIndex = 55;
-            this.groupBox13.TabStop = false;
-            this.groupBox13.Text = "Threads";
+            this.groupBox13threads.Controls.Add(this.numericUpDownCPULights);
+            this.groupBox13threads.Controls.Add(this.label8);
+            this.groupBox13threads.Controls.Add(this.label7);
+            this.groupBox13threads.Controls.Add(this.comboBox2cpu);
+            this.groupBox13threads.Controls.Add(this.label6);
+            this.groupBox13threads.Controls.Add(this.comboBox1opencl);
+            this.groupBox13threads.Location = new System.Drawing.Point(425, 481);
+            this.groupBox13threads.Name = "groupBox13threads";
+            this.groupBox13threads.Size = new System.Drawing.Size(200, 121);
+            this.groupBox13threads.TabIndex = 55;
+            this.groupBox13threads.TabStop = false;
+            this.groupBox13threads.Text = "Threads";
+            // 
+            // numericUpDownCPULights
+            // 
+            this.numericUpDownCPULights.Location = new System.Drawing.Point(118, 90);
+            this.numericUpDownCPULights.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numericUpDownCPULights.Name = "numericUpDownCPULights";
+            this.numericUpDownCPULights.Size = new System.Drawing.Size(72, 22);
+            this.numericUpDownCPULights.TabIndex = 12;
+            this.numericUpDownCPULights.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownCPULights.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(9, 92);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(103, 17);
+            this.label8.TabIndex = 18;
+            this.label8.Text = "Lights For CPU";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(81, 63);
+            this.label7.Location = new System.Drawing.Point(128, 59);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(36, 17);
             this.label7.TabIndex = 17;
@@ -958,9 +990,9 @@
             "6",
             "7",
             "8"});
-            this.comboBox2cpu.Location = new System.Drawing.Point(11, 60);
+            this.comboBox2cpu.Location = new System.Drawing.Point(11, 56);
             this.comboBox2cpu.Name = "comboBox2cpu";
-            this.comboBox2cpu.Size = new System.Drawing.Size(52, 24);
+            this.comboBox2cpu.Size = new System.Drawing.Size(109, 24);
             this.comboBox2cpu.TabIndex = 16;
             this.comboBox2cpu.Text = "8";
             this.comboBox2cpu.SelectionChangeCommitted += new System.EventHandler(this.comboBox2cpu_SelectionChangeCommitted);
@@ -968,7 +1000,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(81, 28);
+            this.label6.Location = new System.Drawing.Point(126, 32);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(60, 17);
             this.label6.TabIndex = 15;
@@ -980,12 +1012,12 @@
             this.comboBox1opencl.FormattingEnabled = true;
             this.comboBox1opencl.Items.AddRange(new object[] {
             "0",
-            "1",
-            "2",
-            "3"});
+            "1 (1xGPU)",
+            "2 (2xGPU)",
+            "3 (2xGPU+CPU)"});
             this.comboBox1opencl.Location = new System.Drawing.Point(11, 27);
             this.comboBox1opencl.Name = "comboBox1opencl";
-            this.comboBox1opencl.Size = new System.Drawing.Size(52, 24);
+            this.comboBox1opencl.Size = new System.Drawing.Size(109, 24);
             this.comboBox1opencl.TabIndex = 0;
             this.comboBox1opencl.Text = "0";
             this.comboBox1opencl.SelectionChangeCommitted += new System.EventHandler(this.comboBox1opencl_SelectionChangeCommitted);
@@ -993,7 +1025,7 @@
             // label8time
             // 
             this.label8time.AutoSize = true;
-            this.label8time.Location = new System.Drawing.Point(9, 29);
+            this.label8time.Location = new System.Drawing.Point(9, 24);
             this.label8time.Name = "label8time";
             this.label8time.Size = new System.Drawing.Size(64, 17);
             this.label8time.TabIndex = 56;
@@ -1002,9 +1034,9 @@
             // groupBox14
             // 
             this.groupBox14.Controls.Add(this.label8time);
-            this.groupBox14.Location = new System.Drawing.Point(425, 588);
+            this.groupBox14.Location = new System.Drawing.Point(425, 608);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(200, 96);
+            this.groupBox14.Size = new System.Drawing.Size(200, 76);
             this.groupBox14.TabIndex = 57;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Time";
@@ -1015,7 +1047,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(637, 696);
             this.Controls.Add(this.groupBox14);
-            this.Controls.Add(this.groupBox13);
+            this.Controls.Add(this.groupBox13threads);
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox11);
             this.Controls.Add(this.groupBox10);
@@ -1063,8 +1095,9 @@
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1lightsforserver)).EndInit();
-            this.groupBox13.ResumeLayout(false);
-            this.groupBox13.PerformLayout();
+            this.groupBox13threads.ResumeLayout(false);
+            this.groupBox13threads.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCPULights)).EndInit();
             this.groupBox14.ResumeLayout(false);
             this.groupBox14.PerformLayout();
             this.ResumeLayout(false);
@@ -1135,12 +1168,14 @@
         private System.Windows.Forms.Button button1client;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericUpDown1lightsforserver;
-        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.GroupBox groupBox13threads;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox comboBox1opencl;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox comboBox2cpu;
         private System.Windows.Forms.Label label8time;
         private System.Windows.Forms.GroupBox groupBox14;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown numericUpDownCPULights;
     }
 }
